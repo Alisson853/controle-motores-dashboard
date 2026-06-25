@@ -62,7 +62,7 @@ export default function ImportarPage() {
 
       if (batches.length === 1) {
         const { error: rpcError } = await supabase.rpc("replace_motores", {
-          dados: result.rows,
+          dados: JSON.stringify(result.rows),
         });
         if (rpcError) throw rpcError;
       } else {
