@@ -29,7 +29,7 @@ interface Motor {
   obs_3: string | null;
 }
 
-type SortKey = "escopo" | "empresa" | "potencia" | "setor" | "data_saida" | "valor_final";
+type SortKey = "escopo" | "empresa" | "potencia" | "setor" | "pedido" | "data_saida" | "valor_final";
 type SortDir = "asc" | "desc";
 
 function getStatus(motor: Motor): string {
@@ -41,11 +41,11 @@ function getStatus(motor: Motor): string {
 function statusColor(status: string) {
   switch (status) {
     case "Retornou":
-      return { dot: "bg-emerald-500", badge: "bg-emerald-50 text-emerald-700", bar: "#2D9D78" };
+      return { dot: "bg-emerald-500", badge: "bg-emerald-50 text-emerald-700 border border-emerald-200/50", bar: "#2D9D78" };
     case "Em reparo":
-      return { dot: "bg-amber-500", badge: "bg-amber-50 text-amber-700", bar: "#D4920A" };
+      return { dot: "bg-amber-500", badge: "bg-amber-50 text-amber-700 border border-amber-200/50", bar: "#D4920A" };
     default:
-      return { dot: "bg-zinc-400", badge: "bg-zinc-100 text-zinc-500", bar: "#D4D4D8" };
+      return { dot: "bg-zinc-400", badge: "bg-zinc-100 text-zinc-500 border border-zinc-200/50", bar: "#D4D4D8" };
   }
 }
 
@@ -194,6 +194,7 @@ export default function Home() {
           m.setor?.toLowerCase().includes(q) ||
           m.empresa?.toLowerCase().includes(q) ||
           m.equipamento?.toLowerCase().includes(q) ||
+          m.pedido?.toLowerCase().includes(q) ||
           m.codigo_utilizado?.toLowerCase().includes(q)
       );
     }
@@ -295,67 +296,74 @@ export default function Home() {
 
   return (
     <>
-      {/* Status strip */}
-      <div className="px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="h-[3px] flex rounded-sm overflow-hidden">
-            <div style={{ flex: statusCounts["Retornou"] }} className="bg-emerald-400" />
-            <div style={{ flex: statusCounts["Em reparo"] }} className="bg-amber-400" />
-            <div style={{ flex: statusCounts["Sem registro"] }} className="bg-zinc-300" />
-          </div>
-        </div>
-      </div>
+      {/* Hero with motor photo background */}
+      <section className="relative overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('/motor-bg.jpg')" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1B2838]/80 via-[#1B2838]/70 to-[#F5F5F2]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#1B2838]/60 to-transparent" />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        {/* Hero */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
-          <div className="flex items-baseline gap-3">
-            <p className="text-4xl sm:text-5xl font-semibold font-mono text-zinc-900 leading-none tracking-tight">
-              {total}
-            </p>
-            <p className="text-[10px] text-zinc-400 uppercase tracking-widest">
-              motores
-            </p>
-          </div>
-          <button
-            onClick={() => { setEditingMotor(null); setShowForm(true); }}
-            className="bg-amber-500 hover:bg-amber-600 text-white text-xs font-medium px-4 py-2.5 rounded-lg transition-colors flex items-center gap-2 self-start sm:self-auto"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-            Novo motor
-          </button>
-        </div>
-
-        {/* Status cards */}
-        <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-6 sm:mb-8">
-          {(["Retornou", "Em reparo", "Sem registro"] as const).map((status) => {
-            const count = statusCounts[status];
-            const pct = Math.round((count / total) * 100);
-            const colors = statusColor(status);
-            return (
-              <button
-                key={status}
-                onClick={() => setStatusFilter(statusFilter === status ? "todos" : status)}
-                className={`bg-white rounded-xl p-3 sm:p-4 text-left relative overflow-hidden transition-all border ${
-                  statusFilter === status ? "border-zinc-300 shadow-sm" : "border-zinc-200/60 hover:border-zinc-300"
-                }`}
-              >
-                <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: colors.bar }} />
-                <p className="text-lg sm:text-2xl font-semibold font-mono text-zinc-800">{count}</p>
-                <p className="text-[9px] sm:text-[10px] text-zinc-400 mt-1 uppercase tracking-wider">
-                  {status}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-14 sm:pt-10 sm:pb-16">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+            <div>
+              <p className="text-[10px] text-zinc-400 uppercase tracking-[3px] mb-2">
+                Frota ativa
+              </p>
+              <div className="flex items-baseline gap-3">
+                <p className="text-5xl sm:text-6xl font-bold font-mono text-white leading-none tracking-tight">
+                  {total}
                 </p>
-                <span className="absolute top-3 sm:top-4 right-3 sm:right-4 text-[10px] font-mono text-zinc-300">
-                  {pct}%
-                </span>
-              </button>
-            );
-          })}
-        </div>
+                <p className="text-sm text-zinc-300 font-light">
+                  motores
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => { setEditingMotor(null); setShowForm(true); }}
+              className="bg-amber-500 hover:bg-amber-400 text-zinc-900 text-xs font-semibold px-5 py-2.5 rounded-lg transition-colors flex items-center gap-2 self-start sm:self-auto shadow-lg shadow-amber-500/20"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Novo motor
+            </button>
+          </div>
 
+          {/* Status cards on the photo */}
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-6">
+            {(["Retornou", "Em reparo", "Sem registro"] as const).map((status) => {
+              const count = statusCounts[status];
+              const pct = Math.round((count / total) * 100);
+              const colors = statusColor(status);
+              return (
+                <button
+                  key={status}
+                  onClick={() => setStatusFilter(statusFilter === status ? "todos" : status)}
+                  className={`backdrop-blur-md rounded-xl p-3 sm:p-4 text-left relative overflow-hidden transition-all border ${
+                    statusFilter === status
+                      ? "bg-white/20 border-white/30"
+                      : "bg-white/10 border-white/10 hover:bg-white/15"
+                  }`}
+                >
+                  <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: colors.bar }} />
+                  <p className="text-xl sm:text-2xl font-bold font-mono text-white">{count}</p>
+                  <p className="text-[9px] sm:text-[10px] text-zinc-300 mt-1 uppercase tracking-wider">
+                    {status}
+                  </p>
+                  <span className="absolute top-3 sm:top-4 right-3 sm:right-4 text-[10px] font-mono text-white/40">
+                    {pct}%
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 -mt-2 pb-8">
         {/* Analytics */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-6 sm:mb-8">
           <StatusChart counts={statusCounts} empresaCounts={empresaCounts} />
@@ -371,7 +379,7 @@ export default function Home() {
             </svg>
             <input
               type="text"
-              placeholder="Buscar TAG, setor, empresa, equipamento..."
+              placeholder="Buscar TAG, setor, empresa, equipamento, pedido..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-white border border-zinc-200 rounded-lg py-2.5 sm:py-2 pl-9 pr-3 text-xs text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/20 transition-colors"
@@ -417,7 +425,7 @@ export default function Home() {
         {/* Table */}
         <div className="bg-white rounded-xl border border-zinc-200/60 overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
-            <table className="w-full text-[11px] min-w-[750px]">
+            <table className="w-full text-[11px] min-w-[850px]">
               <thead>
                 <tr className="border-b border-zinc-100">
                   {([
@@ -425,6 +433,7 @@ export default function Home() {
                     ["empresa", "Empresa"],
                     ["potencia", "Pot."],
                     ["setor", "Setor"],
+                    ["pedido", "Pedido"],
                     ["data_saida", "Saída"],
                     ["valor_final", "R$ Final"],
                   ] as [SortKey, string][]).map(([key, label]) => (
@@ -458,7 +467,8 @@ export default function Home() {
                       <td className="px-3 py-2.5 font-mono font-medium text-amber-700">{m.escopo}</td>
                       <td className="px-3 py-2.5 text-zinc-600">{m.empresa || "—"}</td>
                       <td className="px-3 py-2.5 font-mono text-zinc-500">{m.potencia || "—"}</td>
-                      <td className="px-3 py-2.5 text-zinc-500 max-w-[180px] truncate">{m.setor || "—"}</td>
+                      <td className="px-3 py-2.5 text-zinc-500 max-w-[150px] truncate">{m.setor || "—"}</td>
+                      <td className="px-3 py-2.5 font-mono text-zinc-500">{m.pedido || "—"}</td>
                       <td className="px-3 py-2.5 font-mono text-zinc-500">{formatDate(m.data_saida)}</td>
                       <td className="px-3 py-2.5 font-mono text-zinc-700 text-right">{formatCurrency(m.valor_final)}</td>
                       <td className="px-3 py-2.5">
