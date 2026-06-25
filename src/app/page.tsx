@@ -29,7 +29,7 @@ interface Motor {
   obs_3: string | null;
 }
 
-type SortKey = "escopo" | "empresa" | "potencia" | "setor" | "pedido" | "data_saida" | "valor_final";
+type SortKey = "escopo" | "empresa" | "num_orcamento" | "equipamento" | "modelo_carcaca" | "problema_apresentado" | "codigo_utilizado" | "potencia" | "oc" | "cod_nf" | "pedido" | "orc_inicial" | "valor_final" | "setor" | "data_saida" | "data_volta";
 type SortDir = "asc" | "desc";
 
 function getStatus(motor: Motor): string {
@@ -425,31 +425,40 @@ export default function Home() {
         {/* Table */}
         <div className="bg-white rounded-xl border border-zinc-200/60 overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
-            <table className="w-full text-[11px] min-w-[850px]">
+            <table className="w-full text-[11px] min-w-[1400px]">
               <thead>
                 <tr className="border-b border-zinc-100">
                   {([
-                    ["escopo", "Tag"],
+                    ["escopo", "Tag / Escopo"],
                     ["empresa", "Empresa"],
-                    ["potencia", "Pot."],
-                    ["setor", "Setor"],
+                    ["num_orcamento", "Nº Orç."],
+                    ["equipamento", "Equipamento"],
+                    ["modelo_carcaca", "Modelo/Carcaça"],
+                    ["problema_apresentado", "Problema"],
+                    ["codigo_utilizado", "Cód. Utilizado"],
+                    ["potencia", "Potência"],
+                    ["oc", "OC"],
+                    ["cod_nf", "Cód. NF"],
                     ["pedido", "Pedido"],
+                    ["orc_inicial", "Orç. Inicial"],
+                    ["valor_final", "Valor Final"],
+                    ["setor", "Setor"],
                     ["data_saida", "Saída"],
-                    ["valor_final", "R$ Final"],
+                    ["data_volta", "Volta"],
                   ] as [SortKey, string][]).map(([key, label]) => (
                     <th
                       key={key}
                       onClick={() => toggleSort(key)}
-                      className={`px-3 py-2.5 text-left text-[9px] font-medium uppercase tracking-wider cursor-pointer select-none transition-colors hover:text-zinc-600 ${
-                        key === "valor_final" ? "text-right" : ""
+                      className={`px-2.5 py-2.5 text-left text-[9px] font-medium uppercase tracking-wider cursor-pointer select-none transition-colors hover:text-zinc-600 whitespace-nowrap ${
+                        key === "orc_inicial" || key === "valor_final" ? "text-right" : ""
                       } ${sortKey === key ? "text-zinc-600" : "text-zinc-400"}`}
                     >
                       {label}
                       <SortIcon col={key} />
                     </th>
                   ))}
-                  <th className="px-3 py-2.5 text-left text-[9px] font-medium text-zinc-400 uppercase tracking-wider">Status</th>
-                  <th className="px-3 py-2.5 text-right text-[9px] font-medium text-zinc-400 uppercase tracking-wider">Ações</th>
+                  <th className="px-2.5 py-2.5 text-left text-[9px] font-medium text-zinc-400 uppercase tracking-wider">Status</th>
+                  <th className="px-2.5 py-2.5 text-center text-[9px] font-medium text-zinc-400 uppercase tracking-wider">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -464,21 +473,30 @@ export default function Home() {
                         expandedRow === m.id ? "bg-amber-50/30" : "hover:bg-zinc-50/60"
                       }`}
                     >
-                      <td className="px-3 py-2.5 font-mono font-medium text-amber-700">{m.escopo}</td>
-                      <td className="px-3 py-2.5 text-zinc-600">{m.empresa || "—"}</td>
-                      <td className="px-3 py-2.5 font-mono text-zinc-500">{m.potencia || "—"}</td>
-                      <td className="px-3 py-2.5 text-zinc-500 max-w-[150px] truncate">{m.setor || "—"}</td>
-                      <td className="px-3 py-2.5 font-mono text-zinc-500">{m.pedido || "—"}</td>
-                      <td className="px-3 py-2.5 font-mono text-zinc-500">{formatDate(m.data_saida)}</td>
-                      <td className="px-3 py-2.5 font-mono text-zinc-700 text-right">{formatCurrency(m.valor_final)}</td>
-                      <td className="px-3 py-2.5">
-                        <span className={`inline-flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded-md ${colors.badge}`}>
+                      <td className="px-2.5 py-2 font-mono font-medium text-amber-700 whitespace-nowrap">{m.escopo}</td>
+                      <td className="px-2.5 py-2 text-zinc-600 whitespace-nowrap">{m.empresa || "—"}</td>
+                      <td className="px-2.5 py-2 font-mono text-zinc-500 whitespace-nowrap">{m.num_orcamento || "—"}</td>
+                      <td className="px-2.5 py-2 text-zinc-500 max-w-[160px] truncate">{m.equipamento || "—"}</td>
+                      <td className="px-2.5 py-2 text-zinc-500 max-w-[130px] truncate">{m.modelo_carcaca || "—"}</td>
+                      <td className="px-2.5 py-2 text-zinc-500 max-w-[150px] truncate">{m.problema_apresentado || "—"}</td>
+                      <td className="px-2.5 py-2 font-mono text-zinc-500 whitespace-nowrap">{m.codigo_utilizado || "—"}</td>
+                      <td className="px-2.5 py-2 font-mono text-zinc-500 whitespace-nowrap">{m.potencia || "—"}</td>
+                      <td className="px-2.5 py-2 font-mono text-zinc-500 whitespace-nowrap">{m.oc || "—"}</td>
+                      <td className="px-2.5 py-2 font-mono text-zinc-500 whitespace-nowrap">{m.cod_nf || "—"}</td>
+                      <td className="px-2.5 py-2 font-mono text-zinc-500 whitespace-nowrap">{m.pedido || "—"}</td>
+                      <td className="px-2.5 py-2 font-mono text-zinc-500 text-right whitespace-nowrap">{formatCurrency(m.orc_inicial)}</td>
+                      <td className="px-2.5 py-2 font-mono text-zinc-700 text-right whitespace-nowrap">{formatCurrency(m.valor_final)}</td>
+                      <td className="px-2.5 py-2 text-zinc-500 max-w-[130px] truncate">{m.setor || "—"}</td>
+                      <td className="px-2.5 py-2 font-mono text-zinc-500 whitespace-nowrap">{formatDate(m.data_saida)}</td>
+                      <td className="px-2.5 py-2 font-mono text-zinc-500 whitespace-nowrap">{formatDate(m.data_volta)}</td>
+                      <td className="px-2.5 py-2">
+                        <span className={`inline-flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded-md whitespace-nowrap ${colors.badge}`}>
                           <span className={`w-[5px] h-[5px] rounded-full ${colors.dot}`} />
                           {status}
                         </span>
                       </td>
-                      <td className="px-3 py-2.5 text-right">
-                        <div className="flex items-center justify-end gap-1" onClick={(e) => e.stopPropagation()}>
+                      <td className="px-2.5 py-2 text-center">
+                        <div className="flex items-center justify-center gap-1" onClick={(e) => e.stopPropagation()}>
                           <button
                             onClick={() => openEdit(m)}
                             className="p-1.5 text-zinc-400 hover:text-amber-600 transition-colors rounded-md hover:bg-amber-50"
