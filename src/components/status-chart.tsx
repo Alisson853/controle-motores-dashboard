@@ -23,24 +23,24 @@ export function StatusChart({ counts, empresaCounts }: StatusChartProps) {
 
   const statusLabels = Object.keys(counts);
   const statusValues = Object.values(counts);
-  const statusColors = ["#4DBBA0", "#C9A84C", "#48484E"];
+  const statusColors = ["#2D9D78", "#D4920A", "#D4D4D8"];
 
   const empresaLabels = Object.keys(empresaCounts).slice(0, 10);
   const empresaValues = empresaLabels.map((k) => empresaCounts[k]);
 
   return (
-    <div className="bg-[#141519] rounded-lg border border-zinc-800/40 p-5">
+    <div className="bg-white rounded-xl border border-zinc-200/60 p-5 shadow-sm">
       <div className="flex items-center justify-between mb-5">
-        <h3 className="text-[10px] text-zinc-600 uppercase tracking-wider font-medium">
+        <h3 className="text-[10px] text-zinc-400 uppercase tracking-wider font-medium">
           Distribuição
         </h3>
-        <div className="flex gap-0 bg-zinc-900/60 rounded-md overflow-hidden">
+        <div className="flex gap-0 bg-zinc-100 rounded-lg overflow-hidden">
           <button
             onClick={() => setView("status")}
             className={`px-3 py-1.5 text-[10px] transition-colors ${
               view === "status"
-                ? "text-zinc-200 bg-zinc-800/60"
-                : "text-zinc-600 hover:text-zinc-400"
+                ? "text-zinc-800 bg-white shadow-sm font-medium"
+                : "text-zinc-500 hover:text-zinc-700"
             }`}
           >
             Status
@@ -49,8 +49,8 @@ export function StatusChart({ counts, empresaCounts }: StatusChartProps) {
             onClick={() => setView("empresa")}
             className={`px-3 py-1.5 text-[10px] transition-colors ${
               view === "empresa"
-                ? "text-zinc-200 bg-zinc-800/60"
-                : "text-zinc-600 hover:text-zinc-400"
+                ? "text-zinc-800 bg-white shadow-sm font-medium"
+                : "text-zinc-500 hover:text-zinc-700"
             }`}
           >
             Empresa
@@ -80,12 +80,12 @@ export function StatusChart({ counts, empresaCounts }: StatusChartProps) {
                 plugins: {
                   legend: { display: false },
                   tooltip: {
-                    backgroundColor: "#1E1F25",
-                    titleColor: "#E8E5DE",
-                    bodyColor: "#9A9BA3",
-                    borderColor: "#2A2B32",
+                    backgroundColor: "#18181B",
+                    titleColor: "#FAFAFA",
+                    bodyColor: "#A1A1AA",
+                    borderColor: "#27272A",
                     borderWidth: 1,
-                    cornerRadius: 6,
+                    cornerRadius: 8,
                     padding: 10,
                     titleFont: { size: 11, weight: "normal" },
                     bodyFont: { size: 11 },
@@ -104,11 +104,11 @@ export function StatusChart({ counts, empresaCounts }: StatusChartProps) {
                     className="w-2 h-2 rounded-sm shrink-0"
                     style={{ background: statusColors[i] }}
                   />
-                  <span className="text-[11px] text-zinc-400 min-w-[80px]">{label}</span>
-                  <span className="text-[11px] font-mono text-zinc-300 font-medium">
+                  <span className="text-[11px] text-zinc-600 min-w-[80px]">{label}</span>
+                  <span className="text-[11px] font-mono text-zinc-800 font-medium">
                     {statusValues[i]}
                   </span>
-                  <span className="text-[10px] font-mono text-zinc-700">{pct}%</span>
+                  <span className="text-[10px] font-mono text-zinc-400">{pct}%</span>
                 </div>
               );
             })}
@@ -122,8 +122,8 @@ export function StatusChart({ counts, empresaCounts }: StatusChartProps) {
               datasets: [
                 {
                   data: empresaValues,
-                  backgroundColor: "#C9A84C",
-                  borderRadius: 3,
+                  backgroundColor: "#D4920A",
+                  borderRadius: 4,
                   maxBarThickness: 28,
                 },
               ],
@@ -135,12 +135,12 @@ export function StatusChart({ counts, empresaCounts }: StatusChartProps) {
               plugins: {
                 legend: { display: false },
                 tooltip: {
-                  backgroundColor: "#1E1F25",
-                  titleColor: "#E8E5DE",
-                  bodyColor: "#9A9BA3",
-                  borderColor: "#2A2B32",
+                  backgroundColor: "#18181B",
+                  titleColor: "#FAFAFA",
+                  bodyColor: "#A1A1AA",
+                  borderColor: "#27272A",
                   borderWidth: 1,
-                  cornerRadius: 6,
+                  cornerRadius: 8,
                   padding: 10,
                   bodyFont: { size: 11 },
                   callbacks: {
@@ -150,12 +150,12 @@ export function StatusChart({ counts, empresaCounts }: StatusChartProps) {
               },
               scales: {
                 x: {
-                  grid: { color: "rgba(255,255,255,0.03)" },
-                  ticks: { color: "#48484E", font: { size: 10 } },
+                  grid: { color: "rgba(0,0,0,0.04)" },
+                  ticks: { color: "#A1A1AA", font: { size: 10 } },
                 },
                 y: {
                   grid: { display: false },
-                  ticks: { color: "#7C7D85", font: { size: 10 } },
+                  ticks: { color: "#71717A", font: { size: 10 } },
                 },
               },
             }}

@@ -36,25 +36,25 @@ export function Alerts({ motores }: AlertsProps) {
     .sort((a, b) => b.dias - a.dias);
 
   return (
-    <div className="bg-[#141519] rounded-lg border border-zinc-800/40 p-5">
+    <div className="bg-white rounded-xl border border-zinc-200/60 p-5 shadow-sm">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-[10px] text-zinc-600 uppercase tracking-wider font-medium">
+          <h3 className="text-[10px] text-zinc-400 uppercase tracking-wider font-medium">
             Alertas de reparo
           </h3>
-          <p className="text-[10px] text-zinc-700 mt-0.5">
+          <p className="text-[10px] text-zinc-500 mt-0.5">
             Motores sem retorno há mais de{" "}
             <input
               type="number"
               value={threshold}
               onChange={(e) => setThreshold(Math.max(1, Number(e.target.value)))}
-              className="w-12 bg-zinc-900 border border-zinc-800/50 rounded px-1.5 py-0.5 text-[10px] text-amber-500/80 font-mono text-center focus:outline-none focus:border-zinc-600 inline-block mx-0.5"
+              className="w-12 bg-zinc-50 border border-zinc-200 rounded px-1.5 py-0.5 text-[10px] text-amber-700 font-mono text-center focus:outline-none focus:border-amber-400 inline-block mx-0.5"
             />{" "}
             dias
           </p>
         </div>
         {emReparo.length > 0 && (
-          <span className="text-[10px] font-mono bg-red-500/10 text-red-400 px-2.5 py-1 rounded">
+          <span className="text-[10px] font-mono bg-red-50 text-red-600 px-2.5 py-1 rounded-md">
             {emReparo.length} alerta{emReparo.length !== 1 ? "s" : ""}
           </span>
         )}
@@ -62,25 +62,25 @@ export function Alerts({ motores }: AlertsProps) {
 
       {emReparo.length === 0 ? (
         <div className="py-6 text-center">
-          <p className="text-xs text-zinc-600">Nenhum motor acima do limite</p>
+          <p className="text-xs text-zinc-400">Nenhum motor acima do limite</p>
         </div>
       ) : (
         <div className="space-y-1.5 max-h-[240px] overflow-y-auto">
           {emReparo.map((m) => {
             const severity =
               m.dias >= 365
-                ? "border-red-500/30 bg-red-500/[0.03]"
+                ? "border-red-200 bg-red-50/50"
                 : m.dias >= 180
-                ? "border-amber-500/20 bg-amber-500/[0.02]"
-                : "border-zinc-800/30";
+                ? "border-amber-200 bg-amber-50/50"
+                : "border-zinc-100";
 
             return (
               <div
                 key={m.id}
-                className={`flex items-center justify-between px-3 py-2.5 rounded-md border ${severity} transition-colors`}
+                className={`flex items-center justify-between px-3 py-2.5 rounded-lg border ${severity} transition-colors`}
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <span className="text-[11px] font-mono font-medium text-amber-500/80 shrink-0">
+                  <span className="text-[11px] font-mono font-medium text-amber-700 shrink-0">
                     {m.escopo}
                   </span>
                   <span className="text-[10px] text-zinc-500 truncate">
@@ -88,16 +88,16 @@ export function Alerts({ motores }: AlertsProps) {
                   </span>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
-                  <span className="text-[10px] text-zinc-600">
+                  <span className="text-[10px] text-zinc-400">
                     {m.empresa}
                   </span>
                   <span
                     className={`text-[11px] font-mono font-medium ${
                       m.dias >= 365
-                        ? "text-red-400"
+                        ? "text-red-600"
                         : m.dias >= 180
-                        ? "text-amber-400"
-                        : "text-zinc-400"
+                        ? "text-amber-600"
+                        : "text-zinc-500"
                     }`}
                   >
                     {m.dias}d
