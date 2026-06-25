@@ -363,7 +363,7 @@ export default function Home() {
         </div>
       </section>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 -mt-2 pb-8">
+      <main className="w-full px-3 sm:px-4 -mt-2 pb-8">
         {/* Analytics */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-6 sm:mb-8">
           <StatusChart counts={statusCounts} empresaCounts={empresaCounts} />
@@ -422,109 +422,104 @@ export default function Home() {
           </span>
         </div>
 
-        {/* Table */}
+        {/* Table — full width, no scroll */}
         <div className="bg-white rounded-xl border border-zinc-200/60 overflow-hidden shadow-sm">
-          <div className="overflow-x-auto">
-            <table className="w-full text-[11px] min-w-[1400px]">
-              <thead>
-                <tr className="border-b border-zinc-100">
-                  {([
-                    ["escopo", "Tag / Escopo"],
-                    ["empresa", "Empresa"],
-                    ["num_orcamento", "Nº Orç."],
-                    ["equipamento", "Equipamento"],
-                    ["modelo_carcaca", "Modelo/Carcaça"],
-                    ["problema_apresentado", "Problema"],
-                    ["codigo_utilizado", "Cód. Utilizado"],
-                    ["potencia", "Potência"],
-                    ["oc", "OC"],
-                    ["cod_nf", "Cód. NF"],
-                    ["pedido", "Pedido"],
-                    ["orc_inicial", "Orç. Inicial"],
-                    ["valor_final", "Valor Final"],
-                    ["setor", "Setor"],
-                    ["data_saida", "Saída"],
-                    ["data_volta", "Volta"],
-                  ] as [SortKey, string][]).map(([key, label]) => (
-                    <th
-                      key={key}
-                      onClick={() => toggleSort(key)}
-                      className={`px-2.5 py-2.5 text-left text-[9px] font-medium uppercase tracking-wider cursor-pointer select-none transition-colors hover:text-zinc-600 whitespace-nowrap ${
-                        key === "orc_inicial" || key === "valor_final" ? "text-right" : ""
-                      } ${sortKey === key ? "text-zinc-600" : "text-zinc-400"}`}
-                    >
-                      {label}
-                      <SortIcon col={key} />
-                    </th>
-                  ))}
-                  <th className="px-2.5 py-2.5 text-left text-[9px] font-medium text-zinc-400 uppercase tracking-wider">Status</th>
-                  <th className="px-2.5 py-2.5 text-center text-[9px] font-medium text-zinc-400 uppercase tracking-wider">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((m) => {
-                  const status = getStatus(m);
-                  const colors = statusColor(status);
-                  return (
-                    <tr
-                      key={m.id}
-                      onClick={() => setExpandedRow(expandedRow === m.id ? null : m.id)}
-                      className={`border-b border-zinc-50 last:border-0 cursor-pointer transition-colors ${
-                        expandedRow === m.id ? "bg-amber-50/30" : "hover:bg-zinc-50/60"
-                      }`}
-                    >
-                      <td className="px-2.5 py-2 font-mono font-medium text-amber-700 whitespace-nowrap">{m.escopo}</td>
-                      <td className="px-2.5 py-2 text-zinc-600 whitespace-nowrap">{m.empresa || "—"}</td>
-                      <td className="px-2.5 py-2 font-mono text-zinc-500 whitespace-nowrap">{m.num_orcamento || "—"}</td>
-                      <td className="px-2.5 py-2 text-zinc-500 max-w-[160px] truncate">{m.equipamento || "—"}</td>
-                      <td className="px-2.5 py-2 text-zinc-500 max-w-[130px] truncate">{m.modelo_carcaca || "—"}</td>
-                      <td className="px-2.5 py-2 text-zinc-500 max-w-[150px] truncate">{m.problema_apresentado || "—"}</td>
-                      <td className="px-2.5 py-2 font-mono text-zinc-500 whitespace-nowrap">{m.codigo_utilizado || "—"}</td>
-                      <td className="px-2.5 py-2 font-mono text-zinc-500 whitespace-nowrap">{m.potencia || "—"}</td>
-                      <td className="px-2.5 py-2 font-mono text-zinc-500 whitespace-nowrap">{m.oc || "—"}</td>
-                      <td className="px-2.5 py-2 font-mono text-zinc-500 whitespace-nowrap">{m.cod_nf || "—"}</td>
-                      <td className="px-2.5 py-2 font-mono text-zinc-500 whitespace-nowrap">{m.pedido || "—"}</td>
-                      <td className="px-2.5 py-2 font-mono text-zinc-500 text-right whitespace-nowrap">{formatCurrency(m.orc_inicial)}</td>
-                      <td className="px-2.5 py-2 font-mono text-zinc-700 text-right whitespace-nowrap">{formatCurrency(m.valor_final)}</td>
-                      <td className="px-2.5 py-2 text-zinc-500 max-w-[130px] truncate">{m.setor || "—"}</td>
-                      <td className="px-2.5 py-2 font-mono text-zinc-500 whitespace-nowrap">{formatDate(m.data_saida)}</td>
-                      <td className="px-2.5 py-2 font-mono text-zinc-500 whitespace-nowrap">{formatDate(m.data_volta)}</td>
-                      <td className="px-2.5 py-2">
-                        <span className={`inline-flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded-md whitespace-nowrap ${colors.badge}`}>
-                          <span className={`w-[5px] h-[5px] rounded-full ${colors.dot}`} />
-                          {status}
-                        </span>
-                      </td>
-                      <td className="px-2.5 py-2 text-center">
-                        <div className="flex items-center justify-center gap-1" onClick={(e) => e.stopPropagation()}>
-                          <button
-                            onClick={() => openEdit(m)}
-                            className="p-1.5 text-zinc-400 hover:text-amber-600 transition-colors rounded-md hover:bg-amber-50"
-                            title="Editar"
-                          >
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                            </svg>
-                          </button>
-                          <button
-                            onClick={() => setDeleteConfirm(m.id)}
-                            className="p-1.5 text-zinc-400 hover:text-red-500 transition-colors rounded-md hover:bg-red-50"
-                            title="Excluir"
-                          >
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <polyline points="3 6 5 6 21 6" />
-                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                            </svg>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          <table className="w-full text-[10px]">
+            <thead>
+              <tr className="border-b border-zinc-100">
+                {([
+                  ["escopo", "Escopo"],
+                  ["empresa", "Empresa"],
+                  ["num_orcamento", "Nº Orç"],
+                  ["equipamento", "Equip."],
+                  ["modelo_carcaca", "Mod/Carc"],
+                  ["problema_apresentado", "Problema"],
+                  ["codigo_utilizado", "Cód Util"],
+                  ["potencia", "Pot"],
+                  ["oc", "OC"],
+                  ["cod_nf", "NF"],
+                  ["pedido", "Pedido"],
+                  ["orc_inicial", "Orç Ini"],
+                  ["valor_final", "V.Final"],
+                  ["setor", "Setor"],
+                  ["data_saida", "Saída"],
+                  ["data_volta", "Volta"],
+                ] as [SortKey, string][]).map(([key, label]) => (
+                  <th
+                    key={key}
+                    onClick={() => toggleSort(key)}
+                    className={`px-1 py-2 text-left text-[8px] font-semibold uppercase tracking-wide cursor-pointer select-none transition-colors hover:text-zinc-600 ${
+                      key === "orc_inicial" || key === "valor_final" ? "text-right" : ""
+                    } ${sortKey === key ? "text-zinc-600" : "text-zinc-400"}`}
+                  >
+                    {label}
+                    <SortIcon col={key} />
+                  </th>
+                ))}
+                <th className="px-1 py-2 text-left text-[8px] font-semibold text-zinc-400 uppercase tracking-wide">St</th>
+                <th className="px-1 py-2 text-[8px] font-semibold text-zinc-400 uppercase tracking-wide w-14"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((m) => {
+                const status = getStatus(m);
+                const colors = statusColor(status);
+                return (
+                  <tr
+                    key={m.id}
+                    onClick={() => setExpandedRow(expandedRow === m.id ? null : m.id)}
+                    className={`border-b border-zinc-50 last:border-0 cursor-pointer transition-colors ${
+                      expandedRow === m.id ? "bg-amber-50/30" : "hover:bg-zinc-50/60"
+                    }`}
+                  >
+                    <td className="px-1 py-1.5 font-mono font-medium text-amber-700 truncate max-w-[80px]">{m.escopo}</td>
+                    <td className="px-1 py-1.5 text-zinc-600 truncate max-w-[70px]">{m.empresa || "—"}</td>
+                    <td className="px-1 py-1.5 font-mono text-zinc-500 truncate max-w-[55px]">{m.num_orcamento || "—"}</td>
+                    <td className="px-1 py-1.5 text-zinc-500 truncate max-w-[80px]">{m.equipamento || "—"}</td>
+                    <td className="px-1 py-1.5 text-zinc-500 truncate max-w-[70px]">{m.modelo_carcaca || "—"}</td>
+                    <td className="px-1 py-1.5 text-zinc-500 truncate max-w-[90px]">{m.problema_apresentado || "—"}</td>
+                    <td className="px-1 py-1.5 font-mono text-zinc-500 truncate max-w-[60px]">{m.codigo_utilizado || "—"}</td>
+                    <td className="px-1 py-1.5 font-mono text-zinc-500 truncate max-w-[45px]">{m.potencia || "—"}</td>
+                    <td className="px-1 py-1.5 font-mono text-zinc-500 truncate max-w-[45px]">{m.oc || "—"}</td>
+                    <td className="px-1 py-1.5 font-mono text-zinc-500 truncate max-w-[45px]">{m.cod_nf || "—"}</td>
+                    <td className="px-1 py-1.5 font-mono text-zinc-500 truncate max-w-[55px]">{m.pedido || "—"}</td>
+                    <td className="px-1 py-1.5 font-mono text-zinc-500 text-right truncate max-w-[50px]">{formatCurrency(m.orc_inicial)}</td>
+                    <td className="px-1 py-1.5 font-mono text-zinc-700 text-right truncate max-w-[50px]">{formatCurrency(m.valor_final)}</td>
+                    <td className="px-1 py-1.5 text-zinc-500 truncate max-w-[80px]">{m.setor || "—"}</td>
+                    <td className="px-1 py-1.5 font-mono text-zinc-500">{formatDate(m.data_saida)}</td>
+                    <td className="px-1 py-1.5 font-mono text-zinc-500">{formatDate(m.data_volta)}</td>
+                    <td className="px-1 py-1.5">
+                      <span className={`w-2 h-2 rounded-full inline-block ${colors.dot}`} title={status} />
+                    </td>
+                    <td className="px-1 py-1.5">
+                      <div className="flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          onClick={() => openEdit(m)}
+                          className="p-1 text-zinc-400 hover:text-amber-600 transition-colors rounded hover:bg-amber-50"
+                          title="Editar"
+                        >
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => setDeleteConfirm(m.id)}
+                          className="p-1 text-zinc-400 hover:text-red-500 transition-colors rounded hover:bg-red-50"
+                          title="Excluir"
+                        >
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="3 6 5 6 21 6" />
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
 
           {filtered.length === 0 && (
             <div className="py-12 text-center">
