@@ -90,9 +90,9 @@ function avaliarRisco(umidade: number, temp: number): { risco: "baixo" | "medio"
 }
 
 // Coordenadas: vou usar SP como padrão, mas pode ser ajustado
-const LAT = -23.55;
-const LON = -46.63;
-const CIDADE = "São Paulo, SP";
+const LAT = -30.1087;
+const LON = -51.3248;
+const CIDADE = "Guaíba, RS";
 
 export default function InteligenciaPage() {
   const [clima, setClima] = useState<ClimaData | null>(null);
